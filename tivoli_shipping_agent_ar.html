@@ -1,0 +1,668 @@
+<!DOCTYPE html>
+<html dir="rtl" lang="ar">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;500;600;700;800;900&family=Tajawal:wght@400;500;700;800&display=swap" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+:root{
+--navy:#020B18;--navy2:#041428;--navy3:#071E33;
+--cyan:#00D4FF;--cyan2:#00A8CC;--cyan-dim:#003D50;
+--steel:#0A2640;--steel2:#0F3460;
+--text:#E8F4FD;--text2:#8BADC7;--text3:#4A7A9B;
+--border:#0F3060;--border2:#1A4A80;
+--green:#00FF88;--amber:#FFB347;--red:#FF4757;
+}
+body{font-family:'Cairo',sans-serif;background:var(--navy);color:var(--text);overflow-x:hidden;line-height:1.7;direction:rtl}
+
+nav{position:fixed;top:0;left:0;right:0;z-index:100;background:rgba(2,11,24,0.88);backdrop-filter:blur(12px);border-bottom:1px solid var(--border);padding:0 2rem;height:62px;display:flex;align-items:center;justify-content:space-between}
+.logo{font-family:'Tajawal',sans-serif;font-size:20px;font-weight:800;color:var(--cyan);letter-spacing:0;display:flex;align-items:center;gap:10px}
+.logo-dot{width:8px;height:8px;background:var(--cyan);border-radius:50%;animation:pulse 2s infinite}
+@keyframes pulse{0%,100%{opacity:1;transform:scale(1)}50%{opacity:0.5;transform:scale(1.3)}}
+.nav-links{display:flex;gap:2rem;font-size:14px;color:var(--text2)}
+.nav-links a{color:var(--text2);text-decoration:none;transition:color 0.2s}
+.nav-links a:hover{color:var(--cyan)}
+.nav-cta{background:var(--cyan);color:var(--navy);font-size:13px;font-weight:700;padding:9px 22px;border-radius:6px;border:none;cursor:pointer;font-family:'Cairo',sans-serif}
+
+.hero{min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:100px 2rem 60px;position:relative;overflow:hidden;text-align:center}
+.hero-bg{position:absolute;inset:0;background:radial-gradient(ellipse 80% 50% at 50% 40%,rgba(0,212,255,0.06) 0%,transparent 70%)}
+.hero-grid{position:absolute;inset:0;background-image:linear-gradient(rgba(15,48,96,0.3) 1px,transparent 1px),linear-gradient(90deg,rgba(15,48,96,0.3) 1px,transparent 1px);background-size:60px 60px;mask-image:radial-gradient(ellipse 80% 60% at 50% 50%,black 0%,transparent 80%)}
+.hero-badge{display:inline-flex;align-items:center;gap:8px;background:rgba(0,212,255,0.08);border:1px solid rgba(0,212,255,0.25);border-radius:100px;padding:7px 18px;font-size:13px;color:var(--cyan);margin-bottom:2rem;position:relative}
+.badge-dot{width:6px;height:6px;background:var(--cyan);border-radius:50%;animation:pulse 1.5s infinite}
+h1{font-family:'Tajawal',sans-serif;font-size:clamp(34px,5vw,68px);font-weight:800;line-height:1.2;letter-spacing:0;margin-bottom:1.5rem;position:relative}
+h1 span{color:var(--cyan)}
+.hero-sub{font-size:clamp(15px,2vw,18px);color:var(--text2);max-width:660px;margin:0 auto 2.5rem;line-height:1.9;position:relative}
+.hero-ctas{display:flex;gap:1rem;justify-content:center;flex-wrap:wrap;position:relative;margin-bottom:4rem}
+.btn-primary{background:var(--cyan);color:var(--navy);font-weight:700;font-size:15px;padding:14px 32px;border-radius:8px;border:none;cursor:pointer;font-family:'Cairo',sans-serif;transition:transform 0.2s,box-shadow 0.2s}
+.btn-primary:hover{transform:translateY(-2px);box-shadow:0 8px 32px rgba(0,212,255,0.3)}
+.btn-secondary{background:transparent;color:var(--text);font-weight:500;font-size:15px;padding:14px 32px;border-radius:8px;border:1px solid var(--border2);cursor:pointer;font-family:'Cairo',sans-serif;transition:border-color 0.2s,color 0.2s}
+.btn-secondary:hover{border-color:var(--cyan);color:var(--cyan)}
+.hero-stats{display:flex;gap:3rem;justify-content:center;flex-wrap:wrap;position:relative}
+.stat{text-align:center}
+.stat-num{font-family:'Tajawal',sans-serif;font-size:30px;font-weight:800;color:var(--cyan)}
+.stat-label{font-size:13px;color:var(--text3);margin-top:2px}
+
+.map-section{padding:0 2rem 6rem}
+.map-container{max-width:1100px;margin:0 auto;background:var(--navy2);border:1px solid var(--border);border-radius:16px;overflow:hidden}
+.map-header{padding:1rem 1.5rem;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;background:rgba(4,20,40,0.8)}
+.map-title{font-size:13px;font-weight:600;color:var(--text2);display:flex;align-items:center;gap:8px}
+.live-dot{width:7px;height:7px;background:var(--green);border-radius:50%;animation:pulse 1.5s infinite}
+.map-controls{display:flex;gap:8px}
+.map-ctrl{background:var(--steel);border:1px solid var(--border);color:var(--text2);font-size:11px;padding:4px 12px;border-radius:4px;cursor:pointer;font-family:'Cairo',sans-serif}
+.map-canvas{width:100%;height:420px;position:relative;overflow:hidden;background:#030F1E}
+canvas#worldmap{position:absolute;inset:0;width:100%;height:100%}
+.map-overlay-card{position:absolute;bottom:16px;right:16px;background:rgba(4,20,40,0.95);border:1px solid var(--border2);border-radius:10px;padding:12px 16px;min-width:210px}
+.oc-label{font-size:10px;color:var(--text3);text-transform:uppercase;letter-spacing:1px;margin-bottom:8px}
+.oc-row{display:flex;align-items:center;gap:8px;margin-bottom:6px;font-size:12px}
+.oc-dot{width:8px;height:8px;border-radius:50%;flex-shrink:0}
+.vessel-panel{position:absolute;top:16px;left:16px;background:rgba(4,20,40,0.95);border:1px solid var(--border2);border-radius:10px;padding:12px 16px;width:230px}
+.vp-title{font-size:11px;color:var(--cyan);font-weight:700;margin-bottom:10px;text-transform:uppercase;letter-spacing:0.5px}
+.vp-row{display:flex;justify-content:space-between;align-items:center;padding:6px 0;border-bottom:1px solid rgba(15,48,96,0.5);font-size:12px}
+.vp-row:last-child{border-bottom:none}
+.vp-type{color:var(--text2)}
+.vp-count{font-weight:600;color:var(--text)}
+.vp-status{font-size:10px;padding:2px 6px;border-radius:3px}
+.status-active{background:rgba(0,255,136,0.12);color:var(--green)}
+.status-transit{background:rgba(0,212,255,0.12);color:var(--cyan)}
+.status-idle{background:rgba(255,179,71,0.12);color:var(--amber)}
+
+section{padding:6rem 2rem}
+.section-inner{max-width:1100px;margin:0 auto}
+.section-label{font-size:11px;font-weight:700;color:var(--cyan);text-transform:uppercase;letter-spacing:2px;margin-bottom:1rem}
+.section-title{font-family:'Tajawal',sans-serif;font-size:clamp(26px,4vw,42px);font-weight:800;line-height:1.3;margin-bottom:1rem}
+.section-sub{font-size:16px;color:var(--text2);max-width:580px;line-height:1.8}
+
+.sectors-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:1.5rem;margin-top:3rem}
+.sector-card{background:var(--navy2);border:1px solid var(--border);border-radius:12px;padding:1.75rem;position:relative;overflow:hidden;transition:border-color 0.3s,transform 0.3s;cursor:pointer}
+.sector-card:hover{border-color:var(--cyan);transform:translateY(-4px)}
+.sector-card::before{content:'';position:absolute;inset:0;background:linear-gradient(135deg,rgba(0,212,255,0.03) 0%,transparent 60%)}
+.sector-icon{width:50px;height:50px;border-radius:10px;background:rgba(0,212,255,0.08);border:1px solid rgba(0,212,255,0.2);display:flex;align-items:center;justify-content:center;font-size:22px;margin-bottom:1.25rem}
+.sector-name{font-family:'Tajawal',sans-serif;font-size:19px;font-weight:700;margin-bottom:0.5rem}
+.sector-desc{font-size:13px;color:var(--text2);line-height:1.7;margin-bottom:1rem}
+.sector-tags{display:flex;flex-wrap:wrap;gap:6px}
+.tag{font-size:11px;padding:3px 10px;border-radius:4px;background:rgba(0,212,255,0.06);border:1px solid rgba(0,212,255,0.15);color:var(--cyan)}
+.sector-card.oil .sector-icon{background:rgba(255,179,71,0.08);border-color:rgba(255,179,71,0.2)}
+.sector-card.oil .tag{background:rgba(255,179,71,0.06);border-color:rgba(255,179,71,0.15);color:var(--amber)}
+.sector-card.construction .sector-icon{background:rgba(255,71,87,0.08);border-color:rgba(255,71,87,0.2)}
+.sector-card.construction .tag{background:rgba(255,71,87,0.06);border-color:rgba(255,71,87,0.15);color:var(--red)}
+
+.features-section{background:var(--navy2);border-top:1px solid var(--border);border-bottom:1px solid var(--border)}
+.features-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:2rem;margin-top:3rem}
+.feature-item{padding:1.5rem;border-radius:10px;background:var(--navy);border:1px solid var(--border);transition:border-color 0.3s}
+.feature-item:hover{border-color:var(--border2)}
+.fi-icon{font-size:26px;margin-bottom:1rem}
+.fi-title{font-size:15px;font-weight:700;margin-bottom:0.5rem}
+.fi-desc{font-size:13px;color:var(--text2);line-height:1.7}
+
+.ai-demo{margin-top:3rem;background:var(--navy2);border:1px solid var(--border);border-radius:16px;overflow:hidden;max-width:820px}
+.ai-demo-header{padding:1rem 1.5rem;background:rgba(0,212,255,0.04);border-bottom:1px solid var(--border);display:flex;align-items:center;gap:10px}
+.ai-label{font-size:12px;font-weight:700;color:var(--cyan);text-transform:uppercase;letter-spacing:1px}
+.ai-steps{padding:1.5rem}
+.ai-step{display:flex;gap:1rem;margin-bottom:1.25rem;align-items:flex-start;flex-direction:row-reverse;text-align:right}
+.step-num{width:28px;height:28px;border-radius:50%;background:var(--cyan-dim);border:1px solid rgba(0,212,255,0.4);display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;color:var(--cyan);flex-shrink:0}
+.step-content{flex:1}
+.step-title{font-size:13px;font-weight:600;margin-bottom:3px}
+.step-detail{font-size:12px;color:var(--text2)}
+.ai-result{margin:1rem 1.5rem;background:rgba(0,255,136,0.04);border:1px solid rgba(0,255,136,0.2);border-radius:8px;padding:1rem 1.25rem}
+.ar-title{font-size:11px;font-weight:700;color:var(--green);text-transform:uppercase;letter-spacing:1px;margin-bottom:10px}
+.ar-match{display:flex;justify-content:space-between;align-items:center;padding:6px 0;border-bottom:1px solid rgba(0,255,136,0.08);font-size:13px}
+.ar-match:last-child{border-bottom:none}
+.ar-score{font-weight:700;color:var(--green);font-size:12px}
+
+.vessel-cards{display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:1.25rem;margin-top:2.5rem}
+.vessel-card{background:var(--navy2);border:1px solid var(--border);border-radius:10px;overflow:hidden;transition:border-color 0.3s,transform 0.3s}
+.vessel-card:hover{border-color:var(--border2);transform:translateY(-3px)}
+.vc-header{height:110px;position:relative;display:flex;align-items:center;justify-content:center;font-size:44px}
+.vc-body{padding:1rem}
+.vc-name{font-size:14px;font-weight:700;margin-bottom:2px}
+.vc-type{font-size:11px;color:var(--cyan);margin-bottom:10px}
+.vc-specs{display:grid;grid-template-columns:1fr 1fr;gap:6px}
+.vc-spec-label{font-size:10px;color:var(--text3)}
+.vc-spec-val{font-size:12px;color:var(--text);font-weight:500}
+.vc-footer{padding:0.75rem 1rem;border-top:1px solid var(--border);display:flex;justify-content:space-between;align-items:center}
+.avail-badge{font-size:10px;padding:3px 8px;border-radius:4px}
+.avail-yes{background:rgba(0,255,136,0.1);color:var(--green);border:1px solid rgba(0,255,136,0.2)}
+.avail-no{background:rgba(255,71,87,0.1);color:var(--red);border:1px solid rgba(255,71,87,0.2)}
+.vc-price{font-size:12px;color:var(--cyan);font-weight:700}
+
+.dash-section{background:var(--navy2);border-top:1px solid var(--border);border-bottom:1px solid var(--border)}
+.dash-tabs{display:flex;gap:0;margin-bottom:2rem;background:var(--navy);border:1px solid var(--border);border-radius:8px;padding:4px;width:fit-content}
+.dash-tab{padding:8px 22px;border-radius:6px;font-size:13px;font-weight:700;cursor:pointer;transition:all 0.2s;color:var(--text2);border:none;background:transparent;font-family:'Cairo',sans-serif}
+.dash-tab.active{background:var(--cyan);color:var(--navy)}
+.dashboard-preview{background:var(--navy);border:1px solid var(--border);border-radius:12px;overflow:hidden}
+.dp-header{padding:1rem 1.5rem;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between}
+.dp-user{display:flex;align-items:center;gap:10px}
+.dp-avatar{width:34px;height:34px;border-radius:50%;background:var(--cyan-dim);border:1px solid rgba(0,212,255,0.3);display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:700;color:var(--cyan)}
+.dp-name{font-size:13px;font-weight:600}
+.dp-role{font-size:11px;color:var(--text3)}
+.dp-metrics{display:grid;grid-template-columns:repeat(4,1fr);gap:1px;background:var(--border);border-bottom:1px solid var(--border)}
+.dp-metric{background:var(--navy);padding:1.25rem 1.5rem}
+.dpm-val{font-family:'Tajawal',sans-serif;font-size:24px;font-weight:800;margin-bottom:2px}
+.dpm-label{font-size:11px;color:var(--text3)}
+.dpm-change{font-size:11px;margin-top:3px}
+.change-up{color:var(--green)}.change-dn{color:var(--red)}
+.dp-content{display:grid;grid-template-columns:2fr 1fr;gap:0}
+.dp-main{padding:1.5rem;border-left:1px solid var(--border)}
+.dp-side{padding:1.5rem}
+.dp-stitle{font-size:12px;font-weight:700;color:var(--text2);text-transform:uppercase;letter-spacing:1px;margin-bottom:1rem}
+.shipment-row{display:flex;align-items:center;gap:12px;padding:10px 0;border-bottom:1px solid var(--border);font-size:13px}
+.shipment-row:last-child{border-bottom:none}
+.sh-icon{width:32px;height:32px;border-radius:6px;display:flex;align-items:center;justify-content:center;font-size:14px;flex-shrink:0}
+.sh-info{flex:1}
+.sh-route{font-weight:600;font-size:13px}
+.sh-meta{font-size:11px;color:var(--text3)}
+.sh-status{font-size:11px;padding:3px 8px;border-radius:4px;white-space:nowrap}
+.s-transit{background:rgba(0,212,255,0.1);color:var(--cyan)}
+.s-loading{background:rgba(255,179,71,0.1);color:var(--amber)}
+.s-arrived{background:rgba(0,255,136,0.1);color:var(--green)}
+.notif-row{display:flex;gap:10px;padding:8px 0;border-bottom:1px solid rgba(15,48,96,0.5);font-size:12px}
+.notif-row:last-child{border-bottom:none}
+.notif-dot{width:6px;height:6px;border-radius:50%;flex-shrink:0;margin-top:5px}
+.notif-text{color:var(--text2);line-height:1.5}
+.notif-time{font-size:10px;color:var(--text3);margin-top:2px}
+
+.pricing-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:1.5rem;margin-top:3rem}
+.price-card{background:var(--navy2);border:1px solid var(--border);border-radius:12px;padding:2rem;position:relative;transition:transform 0.3s}
+.price-card:hover{transform:translateY(-4px)}
+.price-card.featured{border-color:var(--cyan);background:rgba(0,212,255,0.03)}
+.price-badge{position:absolute;top:-1px;left:50%;transform:translateX(-50%);background:var(--cyan);color:var(--navy);font-size:11px;font-weight:700;padding:4px 16px;border-radius:0 0 8px 8px;font-family:'Cairo',sans-serif}
+.price-tier{font-size:12px;font-weight:700;color:var(--text3);text-transform:uppercase;letter-spacing:1px;margin-bottom:0.5rem}
+.price-amount{font-family:'Tajawal',sans-serif;font-size:38px;font-weight:800;margin-bottom:0.25rem}
+.price-amount span{font-size:15px;font-weight:400;color:var(--text2)}
+.price-sub{font-size:12px;color:var(--text3);margin-bottom:1.5rem}
+.price-features{list-style:none;margin-bottom:1.75rem}
+.price-features li{display:flex;align-items:center;gap:8px;font-size:13px;padding:5px 0;color:var(--text2);flex-direction:row-reverse;text-align:right}
+.check{color:var(--green);font-size:14px;flex-shrink:0}
+.pf-btn{width:100%;padding:12px;border-radius:8px;font-size:14px;font-weight:700;cursor:pointer;font-family:'Cairo',sans-serif;transition:all 0.2s}
+.pf-btn-outline{background:transparent;border:1px solid var(--border2);color:var(--text)}
+.pf-btn-filled{background:var(--cyan);border:1px solid var(--cyan);color:var(--navy)}
+.pf-btn:hover{opacity:0.85}
+
+footer{background:var(--navy2);border-top:1px solid var(--border);padding:3rem 2rem;text-align:center}
+.footer-logo{font-family:'Tajawal',sans-serif;font-size:22px;font-weight:800;color:var(--cyan);margin-bottom:1rem}
+.footer-tagline{font-size:13px;color:var(--text3);margin-bottom:2rem}
+.footer-links{display:flex;gap:2rem;justify-content:center;flex-wrap:wrap;font-size:13px;color:var(--text3);margin-bottom:2rem}
+.footer-copy{font-size:12px;color:var(--text3)}
+.divider{height:1px;background:linear-gradient(90deg,transparent,var(--border2),transparent)}
+.scroll-indicator{position:absolute;bottom:2rem;left:50%;transform:translateX(-50%);display:flex;flex-direction:column;align-items:center;gap:6px;color:var(--text3);font-size:11px}
+.scroll-arrow{animation:bounce 2s infinite}
+@keyframes bounce{0%,100%{transform:translateY(0)}50%{transform:translateY(5px)}}
+</style>
+</head>
+<body>
+
+<nav>
+  <div class="logo"><div class="logo-dot"></div>Tivoli Shipping Agent</div>
+  <div class="nav-links">
+    <a href="#">المنصة</a>
+    <a href="#">الأسطول</a>
+    <a href="#">الخدمات</a>
+    <a href="#">الأسعار</a>
+  </div>
+  <button class="nav-cta">ابدأ الآن</button>
+</nav>
+
+<!-- HERO -->
+<div class="hero">
+  <div class="hero-bg"></div>
+  <div class="hero-grid"></div>
+  <div class="hero-badge"><div class="badge-dot"></div>منصة الملاحة الذكية — النسخة التجريبية متاحة الآن</div>
+  <h1>وكيل الشحن البحري <span>الذكي</span><br>لكل القطاعات</h1>
+  <p class="hero-sub">Tivoli Shipping Agent تربط أصحاب البضائع، ملّاك السفن، شركات النفط والغاز، وفرق اللوجستيات الإنشائية — كل ذلك عبر منصة بحرية واحدة مدعومة بالذكاء الاصطناعي.</p>
+  <div class="hero-ctas">
+    <button class="btn-primary">استكشف المنصة ←</button>
+    <button class="btn-secondary">شاهد العرض التوضيحي</button>
+  </div>
+  <div class="hero-stats">
+    <div class="stat"><div class="stat-num">+12,400</div><div class="stat-label">سفينة نشطة</div></div>
+    <div class="stat"><div class="stat-num">94</div><div class="stat-label">دولة مغطاة</div></div>
+    <div class="stat"><div class="stat-num">2.1 مليار $</div><div class="stat-label">قيمة البضائع المنقولة</div></div>
+    <div class="stat"><div class="stat-num">99.4%</div><div class="stat-label">دقة المطابقة</div></div>
+  </div>
+  <div class="scroll-indicator"><div class="scroll-arrow">↓</div>مرر للاستكشاف</div>
+</div>
+
+<!-- MAP -->
+<div class="map-section">
+  <div class="map-container">
+    <div class="map-header">
+      <div class="map-title"><div class="live-dot"></div>مراقبة الأسطول المباشرة — تتبع 12,400 سفينة</div>
+      <div class="map-controls">
+        <div class="map-ctrl">شحن بضائع</div>
+        <div class="map-ctrl">بحري / نفط</div>
+        <div class="map-ctrl">إنشاءات</div>
+        <div class="map-ctrl">كل المناطق</div>
+      </div>
+    </div>
+    <div class="map-canvas">
+      <canvas id="worldmap"></canvas>
+      <div class="map-overlay-card">
+        <div class="oc-label">دليل السفن</div>
+        <div class="oc-row"><div class="oc-dot" style="background:#00D4FF"></div>سفن الشحن</div>
+        <div class="oc-row"><div class="oc-dot" style="background:#FFB347"></div>إمداد النفط والغاز</div>
+        <div class="oc-row"><div class="oc-dot" style="background:#FF4757"></div>الرفع الثقيل / إنشاءات</div>
+        <div class="oc-row"><div class="oc-dot" style="background:#00FF88"></div>AHTS / PSV</div>
+        <div class="oc-row"><div class="oc-dot" style="background:#A78BFA"></div>منصات النفط</div>
+      </div>
+      <div class="vessel-panel">
+        <div class="vp-title">حالة الأسطول</div>
+        <div class="vp-row"><span class="vp-type">سفن شحن</span><span class="vp-count">4,821</span><span class="vp-status status-active">نشط</span></div>
+        <div class="vp-row"><span class="vp-type">ناقلات</span><span class="vp-count">2,104</span><span class="vp-status status-transit">عبور</span></div>
+        <div class="vp-row"><span class="vp-type">OSV / PSV</span><span class="vp-count">1,890</span><span class="vp-status status-active">نشط</span></div>
+        <div class="vp-row"><span class="vp-type">AHTS</span><span class="vp-count">743</span><span class="vp-status status-active">نشط</span></div>
+        <div class="vp-row"><span class="vp-type">رفع ثقيل</span><span class="vp-count">312</span><span class="vp-status status-idle">خامل</span></div>
+        <div class="vp-row"><span class="vp-type">سفن الحفر</span><span class="vp-count">198</span><span class="vp-status status-transit">عبور</span></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- SECTORS -->
+<section style="background:var(--navy)">
+  <div class="section-inner">
+    <div class="section-label">منصة متعددة القطاعات</div>
+    <div class="section-title">مصممة لكل قطاع بحري</div>
+    <div class="section-sub">على عكس منصات الشحن التقليدية، تخدم Tivoli Shipping Agent الطيف الكامل من الصناعات البحرية والبرية.</div>
+    <div class="sectors-grid">
+      <div class="sector-card">
+        <div class="sector-icon">🚢</div>
+        <div class="sector-name">الشحن والبضائع</div>
+        <div class="sector-desc">الشحن السائب، الحاويات، البضائع العامة — مطابقة ذكية بالذكاء الاصطناعي مع تخطيط المسارات المثلى وعروض الأسعار.</div>
+        <div class="sector-tags"><span class="tag">شحن سائب</span><span class="tag">حاويات</span><span class="tag">بضائع عامة</span><span class="tag">RoRo</span></div>
+      </div>
+      <div class="sector-card oil">
+        <div class="sector-icon">🛢️</div>
+        <div class="sector-name">النفط والغاز البحري</div>
+        <div class="sector-desc">PSV وAHTS وسفن الحفر والناقلات — لوجستيات إمداد منسقة لعمليات حقول النفط في المياه العميقة والجرف القاري.</div>
+        <div class="sector-tags"><span class="tag">PSV</span><span class="tag">AHTS</span><span class="tag">سفن حفر</span><span class="tag">DP2/DP3</span></div>
+      </div>
+      <div class="sector-card construction">
+        <div class="sector-icon">🏗️</div>
+        <div class="sector-name">الإنشاء والصناعة الثقيلة</div>
+        <div class="sector-desc">نقل الرافعات والتوربينات والمنشآت المعيارية والبضائع الضخمة على سفن رفع ثقيل متخصصة وشبه غاطسة.</div>
+        <div class="sector-tags"><span class="tag">رفع ثقيل</span><span class="tag">شبه غاطس</span><span class="tag">رافعات</span><span class="tag">توربينات رياح</span></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- FEATURES -->
+<section class="features-section">
+  <div class="section-inner">
+    <div class="section-label">مميزات المنصة</div>
+    <div class="section-title">كل ما تحتاجه العمليات البحرية</div>
+    <div class="features-grid">
+      <div class="feature-item">
+        <div class="fi-icon">🤖</div>
+        <div class="fi-title">مطابقة ذكية بالذكاء الاصطناعي</div>
+        <div class="fi-desc">الذكاء الاصطناعي يطابق البضائع بالسفن حسب النوع والمسار والطقس وفئة DP والقرب البحري في ثوانٍ.</div>
+      </div>
+      <div class="feature-item">
+        <div class="fi-icon">🗺️</div>
+        <div class="fi-title">تتبع الأسطول المباشر</div>
+        <div class="fi-desc">مواقع السفن الفورية عبر AIS، تصور المسارات، تنبيهات ازدحام الموانئ، وعلامات المنصات البحرية.</div>
+      </div>
+      <div class="feature-item">
+        <div class="fi-icon">📋</div>
+        <div class="fi-title">نظام حجز متعدد القطاعات</div>
+        <div class="fi-desc">أنشئ شحنات بضائع أو مهام إمداد بحري أو مشاريع لوجستية إنشائية — كل ذلك من منصة واحدة.</div>
+      </div>
+      <div class="feature-item">
+        <div class="fi-icon">💰</div>
+        <div class="fi-title">مزايدة وعروض الشحن</div>
+        <div class="fi-desc">مزادات الشحن المفتوحة، العروض الخاصة، وتسعير تقديري بالذكاء الاصطناعي لأي نوع سفينة أو مسار.</div>
+      </div>
+      <div class="feature-item">
+        <div class="fi-icon">📄</div>
+        <div class="fi-title">مُنشئ العقود</div>
+        <div class="fi-desc">توليد تلقائي لعقود الإيجار البحري وبوالص الشحن واتفاقيات الخدمات البحرية بصيغة PDF.</div>
+      </div>
+      <div class="feature-item">
+        <div class="fi-icon">📊</div>
+        <div class="fi-title">تحليلات على مستوى بلومبرج</div>
+        <div class="fi-desc">مؤشرات أسعار الشحن، معدلات استخدام السفن، معايير المسارات، ومعلومات السوق في الوقت الفعلي.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- AI MATCHING -->
+<section style="background:var(--navy)">
+  <div class="section-inner">
+    <div class="section-label">الذكاء الاصطناعي للمطابقة</div>
+    <div class="section-title">من طلب الشحن إلى أفضل سفينة في ثوانٍ</div>
+    <div class="section-sub">يحلل الذكاء الاصطناعي لدينا 47 معاملاً — نوع البضاعة، الطقس، متطلبات DP، سلامة المسار، كفاءة الوقود — للعثور على سفينتك المثالية.</div>
+    <div class="ai-demo">
+      <div class="ai-demo-header">
+        <div class="live-dot"></div>
+        <div class="ai-label">Tivoli AI — عرض المطابقة المباشر</div>
+      </div>
+      <div class="ai-steps">
+        <div class="ai-step">
+          <div class="step-num">١</div>
+          <div class="step-content">
+            <div class="step-title">طلب مستلم: مهمة إمداد بحري — خليج المكسيك</div>
+            <div class="step-detail">البضاعة: معدات حفر 480 طن · المنشأ: هيوستن · الوجهة: منصة دلتا-7 (28°ش 93°غ) · يشترط DP2 · مواد خطرة فئة 3</div>
+          </div>
+        </div>
+        <div class="ai-step">
+          <div class="step-num">٢</div>
+          <div class="step-content">
+            <div class="step-title">فحص 2,104 سفينة مؤهلة في منطقة الخليج...</div>
+            <div class="step-detail">التصفية حسب: شهادة DP2 · شهادة المواد الخطرة · طاقة السطح ≥500 طن · متاحة خلال 48 ساعة · ارتفاع الأمواج المتوقع 1.8 م</div>
+          </div>
+        </div>
+        <div class="ai-step">
+          <div class="step-num">٣</div>
+          <div class="step-content">
+            <div class="step-title">تحسين المسار: تم حساب 3 خيارات</div>
+            <div class="step-detail">الأسرع: 18 ساعة · الأرخص: 42,000 $ · الأأمن: يتجنب المنظومة الاستوائية TZ-09</div>
+          </div>
+        </div>
+      </div>
+      <div class="ai-result">
+        <div class="ar-title">أفضل التطابقات</div>
+        <div class="ar-match"><span>MV Atlantic Pioneer — PSV 4000 · DP2 · 18 ساعة</span><span class="ar-score">98% تطابق</span></div>
+        <div class="ar-match"><span>MV Gulf Commander — AHTS 180t · DP2 · 21 ساعة</span><span class="ar-score">94% تطابق</span></div>
+        <div class="ar-match"><span>MV Sea Dragon — PSV 3500 · DP2 · 24 ساعة</span><span class="ar-score">89% تطابق</span></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- VESSELS -->
+<section style="background:var(--navy2);border-top:1px solid var(--border)">
+  <div class="section-inner">
+    <div class="section-label">قاعدة بيانات السفن</div>
+    <div class="section-title">+12,400 سفينة في كل الفئات</div>
+    <div class="vessel-cards">
+      <div class="vessel-card">
+        <div class="vc-header" style="background:linear-gradient(135deg,#041428,#0A2640)">🚢</div>
+        <div class="vc-body">
+          <div class="vc-name">MV Pacific Venture</div>
+          <div class="vc-type">ناقلة جافة</div>
+          <div class="vc-specs">
+            <div class="vc-spec"><div class="vc-spec-label">الطاقة</div><div class="vc-spec-val">82,000 DWT</div></div>
+            <div class="vc-spec"><div class="vc-spec-label">السرعة</div><div class="vc-spec-val">14.5 عقدة</div></div>
+            <div class="vc-spec"><div class="vc-spec-label">العلم</div><div class="vc-spec-val">بنما</div></div>
+            <div class="vc-spec"><div class="vc-spec-label">الإنشاء</div><div class="vc-spec-val">2019</div></div>
+          </div>
+        </div>
+        <div class="vc-footer"><span class="avail-badge avail-yes">متاحة الآن</span><span class="vc-price">24k$/يوم</span></div>
+      </div>
+      <div class="vessel-card">
+        <div class="vc-header" style="background:linear-gradient(135deg,#1A1000,#2A1800)">🛢️</div>
+        <div class="vc-body">
+          <div class="vc-name">MV Gulf Commander</div>
+          <div class="vc-type">AHTS — DP2</div>
+          <div class="vc-specs">
+            <div class="vc-spec"><div class="vc-spec-label">قوة السحب</div><div class="vc-spec-val">180 طن</div></div>
+            <div class="vc-spec"><div class="vc-spec-label">فئة DP</div><div class="vc-spec-val">DP2</div></div>
+            <div class="vc-spec"><div class="vc-spec-label">المنطقة</div><div class="vc-spec-val">خليج المكسيك</div></div>
+            <div class="vc-spec"><div class="vc-spec-label">مواد خطرة</div><div class="vc-spec-val">فئة 3</div></div>
+          </div>
+        </div>
+        <div class="vc-footer"><span class="avail-badge avail-yes">متاحة الآن</span><span class="vc-price" style="color:var(--amber)">38k$/يوم</span></div>
+      </div>
+      <div class="vessel-card">
+        <div class="vc-header" style="background:linear-gradient(135deg,#1A0005,#280A10)">🏗️</div>
+        <div class="vc-body">
+          <div class="vc-name">MV Hercules Lift</div>
+          <div class="vc-type">سفينة رفع ثقيل</div>
+          <div class="vc-specs">
+            <div class="vc-spec"><div class="vc-spec-label">طاقة الرفع</div><div class="vc-spec-val">5,000 طن</div></div>
+            <div class="vc-spec"><div class="vc-spec-label">مساحة السطح</div><div class="vc-spec-val">8,400 م²</div></div>
+            <div class="vc-spec"><div class="vc-spec-label">التصنيف</div><div class="vc-spec-val">DNV GL</div></div>
+            <div class="vc-spec"><div class="vc-spec-label">الرافعة</div><div class="vc-spec-val">2×2500 طن</div></div>
+          </div>
+        </div>
+        <div class="vc-footer"><span class="avail-badge avail-no">في العبور</span><span class="vc-price" style="color:var(--red)">95k$/يوم</span></div>
+      </div>
+      <div class="vessel-card">
+        <div class="vc-header" style="background:linear-gradient(135deg,#061428,#0A2040)">⚓</div>
+        <div class="vc-body">
+          <div class="vc-name">MV North Sea Provider</div>
+          <div class="vc-type">PSV — إمداد المنصات</div>
+          <div class="vc-specs">
+            <div class="vc-spec"><div class="vc-spec-label">حمولة السطح</div><div class="vc-spec-val">1,200 طن</div></div>
+            <div class="vc-spec"><div class="vc-spec-label">فئة DP</div><div class="vc-spec-val">DP3</div></div>
+            <div class="vc-spec"><div class="vc-spec-label">المنطقة</div><div class="vc-spec-val">بحر الشمال</div></div>
+            <div class="vc-spec"><div class="vc-spec-label">سعة الأفراد</div><div class="vc-spec-val">60 شخص</div></div>
+          </div>
+        </div>
+        <div class="vc-footer"><span class="avail-badge avail-yes">متاحة الآن</span><span class="vc-price">52k$/يوم</span></div>
+      </div>
+    </div>
+    <div style="text-align:center;margin-top:2rem">
+      <button class="btn-secondary">تصفح كل 12,400 سفينة ←</button>
+    </div>
+  </div>
+</section>
+
+<!-- DASHBOARD -->
+<section class="dash-section">
+  <div class="section-inner">
+    <div class="section-label">لوحات التحكم</div>
+    <div class="section-title">مصممة لكل مستخدم</div>
+    <div class="dash-tabs">
+      <button class="dash-tab active" onclick="setTab(this,'shipper')">صاحب البضاعة</button>
+      <button class="dash-tab" onclick="setTab(this,'owner')">مالك السفينة</button>
+      <button class="dash-tab" onclick="setTab(this,'admin')">الإدارة</button>
+    </div>
+    <div class="dashboard-preview" id="dashboard-preview">
+      <div class="dp-header">
+        <div class="dp-user">
+          <div class="dp-avatar">أخ</div>
+          <div><div class="dp-name">أحمد خليل</div><div class="dp-role">صاحب بضاعة · عضوية مميزة</div></div>
+        </div>
+        <button class="nav-cta" style="font-size:12px;padding:6px 16px">+ شحنة جديدة</button>
+      </div>
+      <div class="dp-metrics">
+        <div class="dp-metric"><div class="dpm-val" style="color:var(--cyan)">14</div><div class="dpm-label">شحنة نشطة</div><div class="dpm-change change-up">↑ 3 هذا الأسبوع</div></div>
+        <div class="dp-metric"><div class="dpm-val" style="color:var(--green)">1.2 م$</div><div class="dpm-label">قيمة البضائع</div><div class="dpm-change change-up">↑ 18% عن الشهر</div></div>
+        <div class="dp-metric"><div class="dpm-val" style="color:var(--amber)">3</div><div class="dpm-label">عروض معلقة</div><div class="dpm-change change-dn">2 تنتهي اليوم</div></div>
+        <div class="dp-metric"><div class="dpm-val" style="color:var(--text)">98%</div><div class="dpm-label">التسليم في الوقت</div><div class="dpm-change change-up">↑ 2% عن المتوسط</div></div>
+      </div>
+      <div class="dp-content">
+        <div class="dp-main">
+          <div class="dp-stitle">الشحنات النشطة</div>
+          <div class="shipment-row">
+            <div class="sh-icon" style="background:rgba(0,212,255,0.08)">🚢</div>
+            <div class="sh-info"><div class="sh-route">شانغهاي ← روتردام</div><div class="sh-meta">حبوب سائبة · 24,000 طن · MV Pacific Venture</div></div>
+            <div class="sh-status s-transit">في العبور</div>
+          </div>
+          <div class="shipment-row">
+            <div class="sh-icon" style="background:rgba(255,179,71,0.08)">🛢️</div>
+            <div class="sh-info"><div class="sh-route">هيوستن ← منصة دلتا-7</div><div class="sh-meta">معدات حفر · 480 طن · MV Gulf Commander</div></div>
+            <div class="sh-status s-loading">جاري التحميل</div>
+          </div>
+          <div class="shipment-row">
+            <div class="sh-icon" style="background:rgba(0,255,136,0.08)">📦</div>
+            <div class="sh-info"><div class="sh-route">أنتويرب ← نيويورك</div><div class="sh-meta">240 حاوية · MV Atlantic Star</div></div>
+            <div class="sh-status s-arrived">وصلت</div>
+          </div>
+          <div class="shipment-row">
+            <div class="sh-icon" style="background:rgba(255,71,87,0.08)">🏗️</div>
+            <div class="sh-info"><div class="sh-route">روتردام ← أبوظبي</div><div class="sh-meta">8 توربينات رياح · MV Hercules Lift</div></div>
+            <div class="sh-status s-transit">في العبور</div>
+          </div>
+        </div>
+        <div class="dp-side">
+          <div class="dp-stitle">الإشعارات</div>
+          <div class="notif-row"><div class="notif-dot" style="background:var(--green)"></div><div><div class="notif-text">MV Pacific Venture اجتازت نقطة تفتيش قناة السويس</div><div class="notif-time">منذ دقيقتين</div></div></div>
+          <div class="notif-row"><div class="notif-dot" style="background:var(--amber)"></div><div><div class="notif-text">عرض سعر جديد لمسار هيوستن-دلتا 7: 41,500$</div><div class="notif-time">منذ 14 دقيقة</div></div></div>
+          <div class="notif-row"><div class="notif-dot" style="background:var(--cyan)"></div><div><div class="notif-text">تم توليد عقد MV Hercules Lift — جاهز للتوقيع</div><div class="notif-time">منذ ساعة</div></div></div>
+          <div class="notif-row"><div class="notif-dot" style="background:var(--red)"></div><div><div class="notif-text">تنبيه طقس: ارتفاع أمواج 3.2م في شمال الأطلسي</div><div class="notif-time">منذ 3 ساعات</div></div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- PRICING -->
+<section style="background:var(--navy)">
+  <div class="section-inner">
+    <div class="section-label">الأسعار</div>
+    <div class="section-title">اختر الباقة المناسبة</div>
+    <div class="pricing-grid">
+      <div class="price-card">
+        <div class="price-tier">مبتدئ</div>
+        <div class="price-amount">299$<span>/شهر</span></div>
+        <div class="price-sub">لشركات الشحن الصغيرة</div>
+        <ul class="price-features">
+          <li><span class="check">✓</span>5 شحنات نشطة</li>
+          <li><span class="check">✓</span>مطابقة ذكية (شحن فقط)</li>
+          <li><span class="check">✓</span>قاعدة بيانات السفن الأساسية</li>
+          <li><span class="check">✓</span>تتبع مباشر (قراءة فقط)</li>
+          <li style="color:var(--text3)"><span style="color:var(--text3)">✕</span>النفط والإنشاء الثقيل</li>
+        </ul>
+        <button class="pf-btn pf-btn-outline">جرّب مجاناً</button>
+      </div>
+      <div class="price-card featured">
+        <div class="price-badge">الأكثر طلباً</div>
+        <div class="price-tier">احترافي</div>
+        <div class="price-amount" style="color:var(--cyan)">899$<span>/شهر</span></div>
+        <div class="price-sub">لجميع القطاعات البحرية</div>
+        <ul class="price-features">
+          <li><span class="check">✓</span>شحنات غير محدودة</li>
+          <li><span class="check">✓</span>مطابقة ذكية كاملة</li>
+          <li><span class="check">✓</span>النفط والإنشاء الثقيل</li>
+          <li><span class="check">✓</span>مزايدة ومزادات الشحن</li>
+          <li><span class="check">✓</span>مُنشئ العقود PDF</li>
+        </ul>
+        <button class="pf-btn pf-btn-filled">اشترك الآن</button>
+      </div>
+      <div class="price-card">
+        <div class="price-tier">مؤسسي</div>
+        <div class="price-amount">مخصص</div>
+        <div class="price-sub">للأساطيل الكبيرة وشركات النفط</div>
+        <ul class="price-features">
+          <li><span class="check">✓</span>كل ما في الباقة الاحترافية</li>
+          <li><span class="check">✓</span>تحليلات على مستوى بلومبرج</li>
+          <li><span class="check">✓</span>بوابة أسطول خاصة</li>
+          <li><span class="check">✓</span>وصول API وتكاملات</li>
+          <li><span class="check">✓</span>مدير حساب مخصص</li>
+        </ul>
+        <button class="pf-btn pf-btn-outline">تواصل مع المبيعات</button>
+      </div>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="footer-logo">⚓ Tivoli Shipping Agent</div>
+  <div class="footer-tagline">منصة الذكاء البحري للشحن، النفط البحري، ولوجستيات الصناعة الثقيلة.</div>
+  <div class="footer-links">
+    <a href="#" style="color:var(--text3);text-decoration:none">المنصة</a>
+    <a href="#" style="color:var(--text3);text-decoration:none">الأسطول</a>
+    <a href="#" style="color:var(--text3);text-decoration:none">النفط البحري</a>
+    <a href="#" style="color:var(--text3);text-decoration:none">الإنشاءات</a>
+    <a href="#" style="color:var(--text3);text-decoration:none">الأسعار</a>
+    <a href="#" style="color:var(--text3);text-decoration:none">توثيق API</a>
+    <a href="#" style="color:var(--text3);text-decoration:none">تواصل معنا</a>
+  </div>
+  <div class="footer-copy">© 2025 Tivoli Shipping Agent · منصة الذكاء البحري · جميع الحقوق محفوظة</div>
+</footer>
+
+<script>
+const canvas=document.getElementById('worldmap');
+const ctx=canvas.getContext('2d');
+let vessels=[];
+
+function resizeCanvas(){
+  const c=canvas.parentElement;
+  canvas.width=c.offsetWidth;
+  canvas.height=c.offsetHeight;
+}
+
+function initVessels(){
+  const routes=[
+    {x1:0.15,y1:0.42,x2:0.48,y2:0.38,color:'#00D4FF'},{x1:0.48,y1:0.38,x2:0.52,y2:0.36,color:'#00D4FF'},
+    {x1:0.20,y1:0.40,x2:0.55,y2:0.55,color:'#00D4FF'},{x1:0.68,y1:0.42,x2:0.85,y2:0.40,color:'#00D4FF'},
+    {x1:0.30,y1:0.45,x2:0.25,y2:0.70,color:'#FFB347'},{x1:0.22,y1:0.42,x2:0.22,y2:0.65,color:'#FFB347'},
+    {x1:0.60,y1:0.35,x2:0.62,y2:0.42,color:'#00FF88'},{x1:0.44,y1:0.38,x2:0.42,y2:0.44,color:'#00FF88'},
+    {x1:0.35,y1:0.40,x2:0.68,y2:0.38,color:'#FF4757'},{x1:0.50,y1:0.42,x2:0.72,y2:0.50,color:'#FF4757'},
+  ];
+  vessels=routes.map(r=>({...r,progress:Math.random(),speed:0.0008+Math.random()*0.0006}));
+}
+
+const ports=[
+  {x:0.146,y:0.408,name:'هيوستن'},{x:0.188,y:0.428,name:'نيويورك'},
+  {x:0.478,y:0.378,name:'روتردام'},{x:0.504,y:0.398,name:'هامبورغ'},
+  {x:0.624,y:0.436,name:'السويس'},{x:0.688,y:0.428,name:'سنغافورة'},
+  {x:0.726,y:0.404,name:'شانغهاي'},{x:0.596,y:0.38,name:'إسطنبول'},
+  {x:0.640,y:0.500,name:'أبوظبي'},{x:0.826,y:0.42,name:'سيدني'},
+];
+const oilRigs=[{x:0.222,y:0.655},{x:0.268,y:0.702},{x:0.598,y:0.328},{x:0.402,y:0.374}];
+
+function drawMap(){
+  const W=canvas.width,H=canvas.height;
+  ctx.clearRect(0,0,W,H);
+  ctx.fillStyle='#020B18';ctx.fillRect(0,0,W,H);
+  ctx.strokeStyle='rgba(15,48,96,0.4)';ctx.lineWidth=0.5;
+  for(let i=0;i<W;i+=60){ctx.beginPath();ctx.moveTo(i,0);ctx.lineTo(i,H);ctx.stroke()}
+  for(let j=0;j<H;j+=60){ctx.beginPath();ctx.moveTo(0,j);ctx.lineTo(W,j);ctx.stroke()}
+  const lands=[
+    [[0.08,0.18],[0.32,0.18],[0.30,0.60],[0.18,0.62],[0.10,0.50],[0.06,0.30]],
+    [[0.18,0.62],[0.28,0.62],[0.30,0.88],[0.18,0.90],[0.14,0.76]],
+    [[0.40,0.20],[0.56,0.18],[0.58,0.42],[0.46,0.46],[0.38,0.36]],
+    [[0.44,0.44],[0.58,0.44],[0.60,0.82],[0.46,0.84],[0.42,0.62]],
+    [[0.56,0.18],[0.90,0.16],[0.88,0.54],[0.70,0.58],[0.60,0.50],[0.58,0.36]],
+    [[0.76,0.58],[0.90,0.58],[0.90,0.76],[0.76,0.78]],
+  ];
+  lands.forEach(pts=>{
+    ctx.beginPath();ctx.moveTo(pts[0][0]*W,pts[0][1]*H);
+    pts.slice(1).forEach(p=>ctx.lineTo(p[0]*W,p[1]*H));
+    ctx.closePath();ctx.fillStyle='#0A1E35';ctx.fill();
+    ctx.strokeStyle='#0F3060';ctx.lineWidth=1;ctx.stroke();
+  });
+  vessels.forEach(v=>{
+    ctx.beginPath();ctx.moveTo(v.x1*W,v.y1*H);ctx.lineTo(v.x2*W,v.y2*H);
+    ctx.strokeStyle=v.color+'22';ctx.lineWidth=1;ctx.setLineDash([4,6]);ctx.stroke();ctx.setLineDash([]);
+  });
+  oilRigs.forEach(r=>{
+    const rx=r.x*W,ry=r.y*H;
+    ctx.beginPath();ctx.arc(rx,ry,5,0,Math.PI*2);ctx.fillStyle='#A78BFA33';ctx.fill();
+    ctx.strokeStyle='#A78BFA';ctx.lineWidth=1;ctx.stroke();
+  });
+  ports.forEach(p=>{
+    const px=p.x*W,py=p.y*H;
+    ctx.beginPath();ctx.arc(px,py,3,0,Math.PI*2);ctx.fillStyle='#00D4FF';ctx.fill();
+    ctx.font='9px Cairo';ctx.fillStyle='#4A7A9B';ctx.fillText(p.name,px+5,py-3);
+  });
+  vessels.forEach(v=>{
+    const x=(v.x1+(v.x2-v.x1)*v.progress)*W,y=(v.y1+(v.y2-v.y1)*v.progress)*H;
+    ctx.beginPath();ctx.arc(x,y,3,0,Math.PI*2);ctx.fillStyle=v.color;ctx.fill();
+    ctx.beginPath();ctx.arc(x,y,6,0,Math.PI*2);ctx.strokeStyle=v.color+'66';ctx.lineWidth=1;ctx.stroke();
+    v.progress+=v.speed;if(v.progress>1)v.progress=0;
+  });
+}
+
+function setTab(el,role){
+  document.querySelectorAll('.dash-tab').forEach(t=>t.classList.remove('active'));
+  el.classList.add('active');
+  const d={
+    shipper:{name:'أحمد خليل',init:'أخ',role:'صاحب بضاعة · مميز',m1:'14',m1l:'شحنة نشطة',m1c:'↑ 3 هذا الأسبوع',m1cc:'up',m2:'1.2م$',m2l:'قيمة البضائع',m2c:'↑ 18%',m2v:'var(--green)',m1v:'var(--cyan)',btn:'+ شحنة جديدة'},
+    owner:{name:'ربان نجيب',init:'رن',role:'مالك سفينة · أسطول 7',m1:'5',m1l:'سفن نشطة',m1c:'1 متاحة الآن',m1cc:'up',m2:'184k$',m2l:'إيراد شهري',m2c:'↑ 9% عن الشهر',m2v:'var(--cyan)',m1v:'var(--green)',btn:'+ أضف سفينة'},
+    admin:{name:'مدير النظام',init:'مد',role:'إدارة Tivoli · عالمي',m1:'12,422',m1l:'سفينة مسجلة',m1c:'↑ 340 هذا الشهر',m1cc:'up',m2:'8.4م$',m2l:'حجم المنصة (الشهر)',m2c:'↑ 24% عن الشهر',m2v:'var(--cyan)',m1v:'var(--amber)',btn:'+ إعدادات'}
+  }[role];
+  const pr=document.getElementById('dashboard-preview');
+  pr.querySelector('.dp-name').textContent=d.name;
+  pr.querySelector('.dp-avatar').textContent=d.init;
+  pr.querySelector('.dp-role').textContent=d.role;
+  pr.querySelector('.nav-cta').textContent=d.btn;
+  const m=pr.querySelectorAll('.dp-metric');
+  m[0].querySelector('.dpm-val').textContent=d.m1;m[0].querySelector('.dpm-val').style.color=d.m1v;
+  m[0].querySelector('.dpm-label').textContent=d.m1l;m[0].querySelector('.dpm-change').textContent=d.m1c;
+  m[0].querySelector('.dpm-change').className='dpm-change change-'+d.m1cc;
+  m[1].querySelector('.dpm-val').textContent=d.m2;m[1].querySelector('.dpm-val').style.color=d.m2v;
+  m[1].querySelector('.dpm-label').textContent=d.m2l;m[1].querySelector('.dpm-change').textContent=d.m2c;
+}
+
+resizeCanvas();initVessels();setInterval(drawMap,50);
+</script>
+</body>
+</html>
